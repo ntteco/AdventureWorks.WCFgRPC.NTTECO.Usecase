@@ -14,7 +14,6 @@
  *
  * NTTECO is the Metadata-Driven Object Graph Authority Platform. No NTTECO
  * implementation is included in this repository.
- *
  * For more information about NTTECO, visit https://ntteco.com.
  */
 syntax = "proto3";
