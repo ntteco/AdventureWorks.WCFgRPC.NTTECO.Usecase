@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2026 NTTECO.
+ *
+ * This source code is provided for demonstration and educational purposes only.
+ * It is offered "as is", without warranty of any kind, express or implied.
+ *
+ * The WCF and gRPC code in this repository is intentionally minimal and may not
+ * represent production-ready implementations.
+ *
+ * **The purpose of this repository is to illustrate the development effort and
+ * complexity involved in modernizing WCF services to gRPC. NTTECO is referenced
+ * only as a modernization usecase category — not as a migration tool, converter,
+ * or automation framework.**
+ *
+ * NTTECO is the Metadata-Driven Object Graph Authority Platform. No NTTECO
+ * implementation is included in this repository.
+ *
+ * For more information about NTTECO, visit https://ntteco.com.
+ */
+syntax = "proto3";
+package AdventureWorks.GrpcClient.workorder;
+option csharp_namespace = "AdventureWorks.GrpcClient.Protos.WorkOrder";
+
+import "google/protobuf/timestamp.proto";
+
+message WorkOrderDto {
+  int32 work_order_id = 1;
+  int32 product_id = 2;
+  int32 order_qty = 3;
+  int32 stocked_qty = 4; // computed
+  int32 scrapped_qty = 5;
+  google.protobuf.Timestamp start_date = 6;
+  google.protobuf.Timestamp end_date = 7;
+  google.protobuf.Timestamp due_date = 8;
+  int32 scrap_reason_id = 9;
+  google.protobuf.Timestamp modified_date = 10;
+}
+
+message WorkOrderCreateDto {
+  int32 product_id = 1;
+  int32 order_qty = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp due_date = 4;
+  int32 scrap_reason_id = 5;
+}
+
+message GetWorkOrderRequest { int32 work_order_id = 1; }
+message ListWorkOrdersRequest { int32 product_id = 1; int32 page = 2; int32 size = 3; }
+
+message PagedWorkOrders {
+  repeated WorkOrderDto items = 1;
+  int32 page = 2;
+  int32 size = 3;
+  int32 total_count = 4;
+}
+
+service WorkOrderService {
+  rpc GetWorkOrder(GetWorkOrderRequest) returns (WorkOrderDto);
+  rpc ListWorkOrdersByProduct(ListWorkOrdersRequest) returns (PagedWorkOrders);
+  rpc CreateWorkOrder(WorkOrderCreateDto) returns (WorkOrderDto);
+}
